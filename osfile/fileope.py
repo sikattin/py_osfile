@@ -13,6 +13,7 @@ import os
 import shutil
 import gzip
 import tarfile
+import zipfile
 
 def get_file_names(dir_path: str):
     """指定したディレクトリ直下のファイル名一覧を取得する関数.
@@ -147,6 +148,32 @@ def create_tararchive(path: str, mode=None):
         raise
     else:
         archive.close()
+
+def zip_data(file_path: str, archive_name=None):
+    """
+    ファイル及びフォルダごとZIP化関数
+    :param file_path: the target file to archive.
+    :param archive_name: archive name saved(not path)
+    :return:
+    """
+    if archive_name is None:
+        zip_path = file_path + ".zip"
+    else:
+        head, tail = os.path.split(file_path)
+        zip_path = head + archive_name + ".zip"
+
+    with zipfile.ZipFile(file=zip_path, mode='w') as zipobj:
+        if os.path.isfile(file_path):
+            zipobj.write(file_path)
+            print(">> archived...   {}".format(file_path))
+            return
+        for dir, sub_dir, file_names in os.walk(file_path):
+            print(">> archived...   {}".format(dir))
+            zipobj.write(dir)
+            for file_name in file_names:
+                print(">> archived...   {}".format(os.path.join(dir, file_name)))
+                zipobj.write(os.path.join(dir, file_name))
+
 
 class FileOpeException(Exception):
     pass
