@@ -154,25 +154,35 @@ def zip_data(file_path: str, archive_name=None):
     ファイル及びフォルダごとZIP化関数
     :param file_path: the target file to archive.
     :param archive_name: archive name saved(not path)
+    :param save_dir: the directory to save an archive.
     :return:
+
+    Raises:
+        FileNotFoundError: raises if file does not exist.
     """
+    # head... base directory.
+    # tail... file name or directory name.
+    head, tail = os.path.split(file_path)
+    basedir_idx = len(head)
     if archive_name is None:
         zip_path = file_path + ".zip"
     else:
-        head, tail = os.path.split(file_path)
         zip_path = head + archive_name + ".zip"
 
     with zipfile.ZipFile(file=zip_path, mode='w') as zipobj:
         if os.path.isfile(file_path):
-            zipobj.write(file_path)
-            print(">> archived...   {}".format(file_path))
+            fname = os.path.split(file_path)[1]
+            zipobj.write(file_path, arcname=fname)
+            print(">> archived...   {}".format(fname))
             return
         for dir, sub_dir, file_names in os.walk(file_path):
+            dir_name = os.path.split(dir)[1]
             print(">> archived...   {}".format(dir))
-            zipobj.write(dir)
+            zipobj.write(dir, arcname=dir[basedir_idx:])
             for file_name in file_names:
                 print(">> archived...   {}".format(os.path.join(dir, file_name)))
-                zipobj.write(os.path.join(dir, file_name))
+                zipobj.write(os.path.join(dir, file_name),
+                             arcname=os.path.join(dir[basedir_idx:], file_name))
 
 
 class FileOpeException(Exception):

@@ -13,7 +13,7 @@ with open('LICENSE') as f:
 
 setup(
     name='fileope',
-    version='1.0',
+    version='1.1',
     description='module for file operation.',
     long_description='module for file operation.',
     author='Takeki Shikano',
