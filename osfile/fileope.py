@@ -14,6 +14,7 @@ import shutil
 import gzip
 import tarfile
 import zipfile
+from stat import *
 
 def get_file_names(dir_path: str):
     """指定したディレクトリ直下のファイル名一覧を取得する関数.
@@ -154,7 +155,6 @@ def zip_data(file_path: str, archive_name=None):
     ファイル及びフォルダごとZIP化関数
     :param file_path: the target file to archive.
     :param archive_name: archive name saved(not path)
-    :param save_dir: the directory to save an archive.
     :return:
 
     Raises:
@@ -184,6 +184,98 @@ def zip_data(file_path: str, archive_name=None):
                 zipobj.write(os.path.join(dir, file_name),
                              arcname=os.path.join(dir[basedir_idx:], file_name))
 
+def add_write_permissions(self, path: str, target='u', recursive=False):
+    """add "write" permission to specified targets.
+
+        Args:
+            param1 path: file path.
+            param2 mode: target to permission.
+            param3 recursive: recursive option. defualt is False.
+                if this param is true, processing recursively.
+
+        Raises:
+            KeyError: raises when referenced unknwon key.
+            FileNotFoundError
+    """
+    target_map = {
+        'u': S_IWUSR,
+        'ug': S_IWUSR | S_IWGRP,
+        'uo': S_IWUSR | S_IWOTH,
+        'g': S_IWGRP,
+        'go': S_IWGRP | S_IWOTH,
+        'o': S_IWOTH,
+        'a': S_IWUSR | S_IWGRP | S_IWOTH,
+    }
+
+    if recursive:
+        for dir, sub_dir, filenames in os.walk(path):
+            os.chmod(path=dir, mode=target_map[target])
+            for filename in filenames:
+                os.chmod(path=os.path.join(dir, filename), mode=target_map[target])
+    else:
+        os.chmod(path=path, mode=target_map[target])
+
+def add_read_permissions(self, path: str, target='u', recursive=False):
+    """add "read" permission to specified targets.
+
+        Args:
+            param1 path: file path.
+            param2 mode: target to permission.
+            param3 recursive: recursive option. defualt is False.
+                if this param is true, processing recursively.
+
+        Raises:
+            KeyError: raises when referenced unknwon key.
+            FileNotFoundError
+    """
+    target_map = {
+        'u': S_IRUSR,
+        'ug': S_IRUSR | S_IRGRP,
+        'uo': S_IRUSR | S_IROTH,
+        'g': S_IRGRP,
+        'go': S_IRGRP | S_IROTH,
+        'o': S_IROTH,
+        'a': S_IRUSR | S_IRGRP | S_IROTH,
+    }
+
+    if recursive:
+        for dir, sub_dir, filenames in os.walk(path):
+            os.chmod(path=dir, mode=target_map[target])
+            for filename in filenames:
+                os.chmod(path=os.path.join(dir, filename), mode=target_map[target])
+    else:
+        os.chmod(path=path, mode=target_map[target])
+
+def add_exc_permissions(self, path: str, mode, recursive=False):
+    """add "execution" permission to specified targets.
+
+        Args:
+            param1 path: file path.
+            param2 mode: target to permission.
+            param3 recursive: recursive option. defualt is False.
+                if this param is true, processing recursively.
+
+        Raises:
+            KeyError: raises when referenced unknwon key.
+            FileNotFoundError
+    """
+    target_map = {
+        'u': S_IXUSR,
+        'ug': S_IXUSR | S_IXGRP,
+        'uo': S_IXUSR | S_IXOTH,
+        'g': S_IXGRP,
+        'go': S_IXGRP | S_IXOTH,
+        'o': S_IXOTH,
+        'a': S_IXUSR | S_IXGRP | S_IXOTH,
+    }
+
+    if recursive:
+        for dir, sub_dir, filenames in os.walk(path):
+            os.chmod(path=dir, mode=target_map[target])
+            for filename in filenames:
+                os.chmod(path=os.path.join(dir, filename), mode=target_map[target])
+    else:
+        os.chmod(path=path, mode=target_map[target])
 
 class FileOpeException(Exception):
     pass

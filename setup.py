@@ -12,14 +12,14 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='fileope',
-    version='1.1',
+    name='osfile',
+    version='1.2',
     description='module for file operation.',
     long_description='module for file operation.',
     author='Takeki Shikano',
     author_email='shikano.takeki@nexon.co.jp',
     url=None,
     license='MIT',
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=find_packages(exclude=('docs',))
 )
 
