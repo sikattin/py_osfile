@@ -184,7 +184,7 @@ def zip_data(file_path: str, archive_name=None):
                 zipobj.write(os.path.join(dir, file_name),
                              arcname=os.path.join(dir[basedir_idx:], file_name))
 
-def add_write_permissions(self, path: str, target='u', recursive=False):
+def change_write_permissions(path: str, target='u', recursive=False):
     """add "write" permission to specified targets.
 
         Args:
@@ -215,7 +215,7 @@ def add_write_permissions(self, path: str, target='u', recursive=False):
     else:
         os.chmod(path=path, mode=target_map[target])
 
-def add_read_permissions(self, path: str, target='u', recursive=False):
+def change_read_permissions(path: str, target='u', recursive=False):
     """add "read" permission to specified targets.
 
         Args:
@@ -246,7 +246,7 @@ def add_read_permissions(self, path: str, target='u', recursive=False):
     else:
         os.chmod(path=path, mode=target_map[target])
 
-def add_exc_permissions(self, path: str, mode, recursive=False):
+def change_exc_permissions(path: str, target='u', recursive=False):
     """add "execution" permission to specified targets.
 
         Args:
