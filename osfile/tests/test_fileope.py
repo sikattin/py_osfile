@@ -79,12 +79,12 @@ class TestFileope(unittest.TestCase):
             fileope.change_exc_permissions(path=fobj.name,
                                           target='g')
             mode = oct(os.stat(fobj.name).st_mode)[-3:]
-            self.assertEqual(mode, '110', msg="mode: {}".format(mode))
+            self.assertEqual(mode, '010', msg="mode: {}".format(mode))
             # test change exc permission to other target.
             fileope.change_exc_permissions(path=fobj.name,
                                         target='o')
             mode = oct(os.stat(fobj.name).st_mode)[-3:]
-            self.assertEqual(mode, '111', msg="mode: {}".format(mode))
+            self.assertEqual(mode, '001', msg="mode: {}".format(mode))
         del fobj
 
         with tempfile.NamedTemporaryFile() as fobj:

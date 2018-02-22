@@ -277,6 +277,20 @@ def change_exc_permissions(path: str, target='u', recursive=False):
     else:
         os.chmod(path=path, mode=target_map[target])
 
+def join_path(head: str, tail: str):
+    """os.path.join wrapper method."""
+    return os.path.join(head, tail)
+
+def change_permission(path: str, mode: int):
+    """
+    mode_map = {
+        '0': '',
+        '1': [S_IXUSR, S_IXGRP, S_IXOTH],
+        '2': [S_IWUSR, S_IWGRP, S_IWOTH],
+        '3': [('S_IWUSR | S_IXUSR')]
+    }
+    """
+
 class FileOpeException(Exception):
     pass
 
