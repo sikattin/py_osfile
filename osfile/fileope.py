@@ -15,6 +15,7 @@ import gzip
 import tarfile
 import zipfile
 from stat import *
+from unicodedata import east_asian_width
 
 def get_file_names(dir_path: str):
     """指定したディレクトリ直下のファイル名一覧を取得する関数.
@@ -280,6 +281,31 @@ def change_exc_permissions(path: str, target='u', recursive=False):
 def join_path(head: str, tail: str):
     """os.path.join wrapper method."""
     return os.path.join(head, tail)
+
+def get_strlength(line: str):
+    """get length of string.
+
+    Args:
+        param1 line: string
+
+    Returns:
+        string length(int)
+    """
+
+    width_dict = {
+        'F': 2,   # Fullwidth
+        'H': 1,   # Halfwidth
+        'W': 2,   # Wide
+        'Na': 1,  # Narrow
+        'A': 2,   # Ambiguous
+        'N': 1    # Neutral
+    }
+
+    chars = [char for char in line]
+    eaw_list = [east_asian_width(char) for char in chars]
+    char_length = [width_dict[eaw] for eaw in eaw_list]
+    return sum(char_length)
+
 
 def change_permission(path: str, mode: int):
     """
