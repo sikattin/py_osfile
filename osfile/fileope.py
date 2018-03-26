@@ -307,7 +307,7 @@ def get_strlength(line: str):
     return sum(char_length)
 
 
-def change_permission(path: str, user_mode: int, grp_mode: int, oth_mode: int,
+def change_permission(path: str, user_mode: str, grp_mode: str, oth_mode: str,
                       recursive=False):
     """
     """
@@ -341,15 +341,19 @@ def change_permission(path: str, user_mode: int, grp_mode: int, oth_mode: int,
         '6': S_IROTH | S_IWOTH,
         '7': S_IROTH | S_IWOTH | S_IXOTH
     }
+    mode = 0
 
-    mode_list = [user_mode_map[user_mode], grp_mode_map[grp_mode], oth_mode_map[oth_mode]]
-    if user_mode == 0:
-        mode_list.pop(0)
-    if grp_mode == 0:
-        mode_list.pop(1)
-    if oth_mode == 0:
-        mode_list.pop(2)
-    mode = ' | '.join(mode_list)
+    mode_list = {'u_mode': user_mode_map[user_mode],
+                 'g_mode': grp_mode_map[grp_mode],
+                 'o_mode': oth_mode_map[oth_mode]}
+    if user_mode == '0':
+        mode_list.pop('u_mode')
+    if grp_mode == '0':
+        mode_list.pop('g_mode')
+    if oth_mode == '0':
+        mode_list.pop('o_mode')
+    for key, value in mode_list.items():
+        mode |= value
 
     if recursive:
         for dir, sub_dir, filenames in os.walk(path):

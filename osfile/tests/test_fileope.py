@@ -98,23 +98,23 @@ class TestFileope(unittest.TestCase):
         with tempfile.NamedTemporaryFile() as fobj:
             # change permission to 600 for test.
             fileope.change_permission(path=fobj.name,
-                                      user_mode=6,
-                                      grp_mode=0,
-                                      oth_mode=0)
+                                      user_mode='6',
+                                      grp_mode='0',
+                                      oth_mode='0')
             mode = oct(os.stat(fobj.name).st_mode)[-3:]
             self.assertEqual(mode, '600', msg='mode: {}'.format(mode))
             # change permission to 666 for test.
             fileope.change_permission(path=fobj.name,
-                                      user_mode=6,
-                                      grp_mode=6,
-                                      oth_mode=6)
+                                      user_mode='6',
+                                      grp_mode='6',
+                                      oth_mode='6')
             mode = oct(os.stat(fobj.name).st_mode)[-3:]
             self.assertEqual(mode, '666', msg='mode: {}'.format(mode))
             # change permission to 540 for test.
             fileope.change_permission(path=fobj.name,
-                                      user_mode=5,
-                                      grp_mode=4,
-                                      oth_mode=0)
+                                      user_mode='5',
+                                      grp_mode='4',
+                                      oth_mode='0')
             mode = oct(os.stat(fobj.name).st_mode)[-3:]
             self.assertEqual(mode, '540', msg='mode: {}'.format(mode))
 
