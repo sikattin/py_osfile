@@ -307,15 +307,57 @@ def get_strlength(line: str):
     return sum(char_length)
 
 
-def change_permission(path: str, mode: int):
+def change_permission(path: str, user_mode: int, grp_mode: int, oth_mode: int,
+                      recursive=False):
     """
-    mode_map = {
+    """
+    user_mode_map = {
         '0': '',
-        '1': [S_IXUSR, S_IXGRP, S_IXOTH],
-        '2': [S_IWUSR, S_IWGRP, S_IWOTH],
-        '3': [('S_IWUSR | S_IXUSR')]
+        '1': S_IXUSR,
+        '2': S_IWUSR,
+        '3': S_IWUSR | S_IXUSR,
+        '4': S_IRUSR,
+        '5': S_IRUSR | S_IXUSR,
+        '6': S_IRUSR | S_IWUSR,
+        '7': S_IRUSR | S_IWUSR | S_IXUSR
     }
-    """
+    grp_mode_map = {
+        '0': '',
+        '1': S_IXGRP,
+        '2': S_IWGRP,
+        '3': S_IWGRP | S_IXGRP,
+        '4': S_IRGRP,
+        '5': S_IRGRP | S_IXGRP,
+        '6': S_IRGRP | S_IWGRP,
+        '7': S_IRGRP | S_IWGRP | S_IXGRP
+    }
+    oth_mode_map = {
+        '0': '',
+        '1': S_IXOTH,
+        '2': S_IWOTH,
+        '3': S_IWOTH | S_IXOTH,
+        '4': S_IROTH,
+        '5': S_IROTH | S_IXOTH,
+        '6': S_IROTH | S_IWOTH,
+        '7': S_IROTH | S_IWOTH | S_IXOTH
+    }
+
+    mode_list = [user_mode_map[user_mode], grp_mode_map[grp_mode], oth_mode_map[oth_mode]]
+    if user_mode == 0:
+        mode_list.pop(0)
+    if grp_mode == 0:
+        mode_list.pop(1)
+    if oth_mode == 0:
+        mode_list.pop(2)
+    mode = ' | '.join(mode_list)
+
+    if recursive:
+        for dir, sub_dir, filenames in os.walk(path):
+            os.chmod(path=dir, mode=mode)
+            for filename in filenames:
+                os.chmod(path=os.path.join(dir, filename), mode=mode)
+    else:
+        os.chmod(path=path, mode=mode)
 
 class FileOpeException(Exception):
     pass
