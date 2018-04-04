@@ -168,7 +168,7 @@ def zip_data(file_path: str, archive_name=None):
     if archive_name is None:
         zip_path = file_path + ".zip"
     else:
-        zip_path = head + archive_name + ".zip"
+        zip_path = head + "/" + archive_name + ".zip"
 
     with zipfile.ZipFile(file=zip_path, mode='w') as zipobj:
         if os.path.isfile(file_path):
