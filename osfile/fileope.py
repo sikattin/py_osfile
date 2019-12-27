@@ -148,7 +148,7 @@ def create_tararchive(path: str, mode=None):
         archive.add(archive_name)
     except tarfile.TarError:
         raise
-    else:
+    finally:
         archive.close()
 
 def zip_data(file_path: str, archive_name=None):
